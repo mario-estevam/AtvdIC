@@ -1,8 +1,3 @@
-# JFuzzyLogicExample
+# Ativiade da matéria Inteligência Computacional desenvolvendo um sistema Fuzzy
 
-
-Exemplo de aplicação fuzzy usando jfuzzylogic
-
-http://jfuzzylogic.sourceforge.net/html/manual.html#fcl
-
-Exemplos com modelo Mandani, Takagi-Sugeno e usando conjuntos Singletons. 
+na atividade foi desenvolvido um sistema fuzzy que mede o nível de aglomeração de um determinado setor.
