@@ -1,0 +1,64 @@
+FUNCTION_BLOCK teste  // Block definition (there may be more than one block per file)
+
+VAR_INPUT              // Define input variables
+   Idade : REAL;
+   Agua : REAL;
+END_VAR
+
+VAR_OUTPUT             // Define output variable
+   corpoAgua : REAL;
+END_VAR
+
+FUZZIFY Idade            // Fuzzify input variable 
+   TERM jovem := (0, 1)(10,1) (30, 1) (40, 0) ; 
+   TERM adulto:= (30, 0) (40,1) (60,1) (70,0);
+   TERM idoso := (60, 0) (70, 1) (90,1);
+END_FUZZIFY
+
+FUZZIFY Agua           // Fuzzify input variable 
+   TERM muitoAlta := (75,0) (80,1) (95,1) (100,0);
+   TERM Alta := (45,0) (50,1) (75,1) (80,0);
+   TERM media := (25,0) (30,1) (45,1) (50,0);
+   TERM Baixa := (5,0) (10,1) (25,1) (30,0);
+   TERM muitoBaixa := (0,1) (5,1) (10,0);
+END_FUZZIFY
+
+DEFUZZIFY corpoAgua          // Defzzzify output variable 
+
+   TERM muitoAlta := (75,0) (80,1) (95,1) (100,0);
+   TERM Alta := (45,0) (50,1) (75,1) (80,0);
+   TERM media := (25,0) (30,1) (45,1) (50,0);
+   TERM Baixa := (5,0) (10,1) (25,1) (30,0);
+   TERM muitoBaixa := (0,1) (5,1) (10,0);
+   
+   
+   METHOD : COGF;       // Use 'Center Of Gravity' defuzzification method
+   DEFAULT := 0;       // Default value IS 0 (if no rule activates defuzzifier)
+END_DEFUZZIFY
+
+RULEBLOCK No1
+   ACCU : MAX;         // Use 'max' accumulation method
+   AND : MIN;          // Use 'min' for 'and' (also implicit use 'max' for 'or' to fulfill DeMorgan's Law)
+   ACT : MIN;          // Use 'min' activation method
+
+		
+		RULE 1 : IF Idade IS idoso AND Agua IS Alta THEN corpoAgua IS muitoBaixa;
+		RULE 2 : IF Idade IS idoso THEN corpoAgua IS Baixa;
+		RULE 3 : IF Idade IS idoso AND Agua IS baixa THEN corpoAgua IS muitoBaixa;
+		RULE 4 : IF Idade IS Jovem THEN corpoAgua IS Alta;
+		RULE 5 : IF Idade IS adulto THEN corpoAgua IS media;
+		RULE 6 : IF Agua IS media THEN corpoAgua IS media;
+		RULE 7 : IF Agua IS baixa THEN corpoAgua IS Baixa;
+		RULE 8 : IF Agua IS Alta THEN corpoAgua IS Alta;
+		RULE 9 : IF Idade IS Jovem AND Agua IS media THEN corpoAgua IS Alta; 
+		RULE 10 : IF Idade IS Jovem AND Agua IS baixa THEN corpoAgua IS media;
+		RULE 11 : IF Idade IS adulto AND Agua IS Alta  THEN corpoAgua IS media;
+		RULE 12 : IF Idade IS adulto AND Agua IS media THEN corpoAgua IS Baixa;
+		RULE 13 : IF Idade IS adulto AND Agua IS baixa THEN corpoAgua IS muitoBaixa ;
+		RULE 14: IF Idade IS idoso AND Agua IS Alta THEN corpoAgua IS Baixa;
+		RULE 15: IF Idade IS idoso AND Agua IS media THEN corpoAgua IS muitoBaixa;
+		RULE 16: IF Idade IS idoso AND Agua IS baixa THEN corpoAgua IS muitoBaixa; 
+		RULE 17 : IF Idade IS Jovem AND Agua IS Alta  THEN corpoAgua IS Alta;
+END_RULEBLOCK
+
+END_FUNCTION_BLOCK
